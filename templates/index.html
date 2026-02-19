@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <!-- Header Section -->
+    <div class="header">
+        <div class="header-content">
+            <h1 class="title">
+                <span class="icon">📈</span>
+                Stock Analyzer
+            </h1>
+            <p class="subtitle">Analyze market fundamentals & technical indicators at a glance</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Error Message -->
+        {% if error %}
+            <div class="error-alert">
+                <span class="error-icon">⚠️</span>
+                <div class="error-content">
+                    <p class="error-title">Oops!</p>
+                    <p class="error-message">{{ error }}</p>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Search Form -->
+        <div class="form-wrapper">
+            <form method="POST" class="search-form">
+                <div class="input-group">
+                    <label for="ticker" class="sr-only">Stock Ticker</label>
+                    <input
+                        id="ticker"
+                        type="text"
+                        name="ticker"
+                        placeholder="Enter stock ticker (e.g. AAPL)"
+                        value="{{ request.form.ticker or '' }}"
+                        autofocus
+                        maxlength="10"
+                        required
+                        oninput="this.value = this.value.toUpperCase()"
+                        class="ticker-input"
+                    >
+                    <button type="submit" class="analyze-btn">
+                        <span class="btn-text">Analyze</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                </div>
+                <p class="form-hint">Try: AAPL, GOOGL </p>
+            </form>
+        </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Disclaimer: This tool is for educational purposes only. Not financial advice.</p>
+    </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ result.ticker }} Analysis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- url_for('static', filename='style.css') generates the correct URL for the static file
+     i.e. style.css located in the static folder, the url looks like /static/style.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+
+<div class="container">
+    <!-- Navigation Header -->
+    <div class="results-header">
+        <a href="/" class="back-link">
+            <span class="back-icon">←</span>
+            Back to Search
+        </a>
+    </div>
+
+    <!-- Ticker Title Section -->
+    <div class="ticker-header">
+        <h1 class="ticker-title">{{ result.ticker }}  ({{ result.name }}) </h1>
+        <p class="ticker-description">Comprehensive Market Analysis</p>
+    </div>
+
+    <!-- Summary Cards Section -->
+    <div class="summary-cards">
+        <div class="summary-card score-card">
+            <div class="card-header">
+                <h2>Overall Score</h2>
+                <span class="card-icon">📊</span>
+            </div>
+            <p class="score-value">{{ result.score }}/10</p>
+            <div class="score-bar">
+                <div class="score-fill" style="width: {{ result.score * 10 }}%"></div>
+            </div>
+        </div>
+
+        <div class="summary-card recommendation-card {{ result.recommendation | lower }}">
+            <div class="card-header">
+                <h2>Recommendation</h2>
+                <span class="card-icon">
+                    {% if result.recommendation | lower == "buy" %}
+                        📈
+                    {% elif result.recommendation | lower == "sell" %}
+                        📉
+                    {% else %}
+                        ➡️
+                    {% endif %}
+                </span>
+            </div>
+            <p class="recommendation-value">{{ result.recommendation }}</p>
+            <p class="recommendation-note">Based on current market data</p>
+        </div>
+    </div>
+
+    <!-- Fundamentals Section -->
+    <section class="data-section">
+        <div class="section-header">
+            <h2 class="section-title">📈 Fundamentals</h2>
+            <p class="section-description">Core financial metrics</p>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Revenue Growth</div>
+                <div class="metric-value">{{ result.fundamentals.revenue_growth or "N/A" }}%</div>
+                <div class="metric-item">
+                    <div class="metric-status">Higher is better</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Profit Margin</div>
+                <div class="metric-value">{{ result.fundamentals.profit_margin or "N/A" }}%</div>
+                <div class="metric-item">
+                    <div class="metric-status">Higher is better</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Return on Equity</div>
+                <div class="metric-value">{{ result.fundamentals.roe or "N/A" }}%</div>
+                <div class="metric-item">
+                    <div class="metric-status">Higher is better</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Debt to Equity</div>
+                <div class="metric-value">{{ result.fundamentals.debt_to_equity or "N/A" }}</div>
+                <div class="metric-item">
+                    <div class="metric-status">Lower is better</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technicals Section -->
+    <section class="data-section">
+        <div class="section-header">
+            <h2 class="section-title">📊 Technicals</h2>
+            <p class="section-description">Price action indicators</p>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">RSI (Relative Strength Index)</div>
+                <div class="metric-value">{{ result.technicals.rsi or "N/A" }}</div>
+                <div class="metric-status">
+                    {% if result.technicals.rsi %}
+                        {% if result.technicals.rsi > 70 %}
+                            Overbought
+                        {% elif result.technicals.rsi < 30 %}
+                            Oversold
+                        {% else %}
+                            Neutral
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">MACD Signal</div>
+                <div class="macd-values">
+                    <div class="macd-item">
+                        <span class="macd-label">MACD:</span>
+                        <span class="macd-value">{{ result.technicals.macd.macd }}</span>
+                    </div>
+                    <div class="macd-item">
+                        <span class="macd-label">Signal:</span>
+                        <span class="macd-value">{{ result.technicals.macd.signal }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="data-section">
+        <div class="section-header">
+            <h2 class="section-title">📉 Technical Charts</h2>
+            <p class="section-description">Visual analysis of market trends</p>
+        </div>
+
+        <div class="charts-container">
+            {% if result.charts.rsi %}
+                <div class="chart-wrapper">
+                    <h3 class="chart-title">RSI Indicator</h3>
+                    <img src="{{ url_for('static', filename=result.charts.rsi) }}"alt="RSI Chart" class="chart-image">
+
+                </div>
+            {% endif %}
+
+            {% if result.charts.macd %}
+                <div class="chart-wrapper">
+                    <h3 class="chart-title">MACD Indicator</h3>
+                    <img src="{{ url_for('static', filename=result.charts.macd) }}" alt="MACD Chart" class="chart-image">
+
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>⚠️ Disclaimer: This analysis is for educational purposes only. Not financial advice. Always do your own research.</p>
+    </footer>
+</div>
+
+</body>
+</html>

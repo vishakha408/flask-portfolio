@@ -1,0 +1,129 @@
+Revenue Growth:
+How fast a company’s sales are increasing.
+Growing revenue usually means the business is expanding.
+
+Total Revenue:
+Total money the company makes from selling products/services (before expenses).
+
+Net Profit Margin:
+How much profit the company keeps from its sales.
+Formula: Net Income ÷ Revenue * 100
+If revenue = $100
+Profit = $20
+Net profit margin = 20%
+Higher margin = company keeps more money from each dollar earned.
+
+Return on Equity (ROE):
+How good the company is at using investors’ money to make profit.
+Formula: Profit ÷ Shareholders’ money
+If investors put in $100
+Company makes $20 profit
+ROE = 20%
+Higher ROE = company uses money efficiently.
+
+Debt to Equity (D/E):
+How much debt the company has compared to its own money.
+Formula: Debt ÷ Shareholders’ equity
+If Debt = $50
+Equity = $100
+D/E = 0.5
+High D/E = company relies more on borrowed money (riskier).
+
+Balance Sheet:
+A financial snapshot of a company at one moment.
+It shows: Assets (what it owns), Liabilities (what it owes), Equity (what’s left for shareholders)
+Formula: Assets = Liabilities + Equity
+
+RSI (Relative Strength Index);:
+Shows if a stock is overbought or oversold.
+Step 1: Calculate Relative Strength (RS)
+        RS = Average Gain / Average Loss
+Step 2: Calculate RSI
+        RSI = 100 − (100 / (1 + RS))
+Standard period = 14
+Scale: 0–100
+Above 70 → Overbought (might drop soon)
+Below 30 → Oversold (might rise soon)
+Approx. 50 → Neutral
+
+Moving Averages (MA):
+Got it 👍 — you want the general formulas and concepts, not Python code.
+
+Here’s a clear breakdown of MA, RSI, and MACD conceptually.
+
+Moving Average (MA):
+🔹 Simple Moving Average (SMA)	​
+Average stock price over a period of time.
+Used to: Identify trend direction, Find support/resistance, Generate buy/sell signals
+Types:
+SMA (Simple Moving Average) → normal average
+Formula: (𝑃1 + 𝑃2 + ... Pn) / n
+Where:
+P = closing price of day 1,2...n
+n = number of periods(days)
+Example (5-day MA):
+= Sum of Last 5 closing prices /5
+
+EMA (Exponential Moving Average) → gives more weight to recent prices
+Formula: EMA = (Price × k) + (Previous EMA × (1 − k))
+Where:
+k = 2 / (n + 1)
+n = number of periods
+
+
+🟢 Support = a price level where the stock usually stops falling and bounces back up.
+Think of it like a floor.
+When price falls to that level, buyers step in and push it back up.
+If a stock keeps dropping to $50 and then going back up —
+👉 $50 is acting as support.
+Because buyers believe it's "cheap" at that price.
+
+🔴 Resistance = a price level where the stock usually stops rising and falls back down.
+Think of it like a ceiling.
+When price rises to that level, sellers step in.
+If a stock keeps rising to $80 and then dropping —
+👉 $80 is acting as resistance.
+Because sellers think it’s "expensive" at that price.
+
+Break Below Support:
+If price falls below support, It may keep dropping.
+Old support often becomes new resistance.
+
+Break Above Resistance:
+If price breaks above resistance, It may keep rising.
+Old resistance often becomes new support.
+
+This is called a breakout.
+
+MACD (Moving Average Convergence Divergence):
+A trend-following indicator made from moving averages.
+🔵 MACD Line:
+Difference between two moving averages (usually 12-day & 26-day).
+Shows trend direction.
+🟠 Signal Line
+A smoothed average of the MACD line.
+Used to spot buy/sell signals.
+
+MACD Line = EMA(12) − EMA(26)
+Signal Line = EMA(9) of MACD ------- i.e 9-period EMA of MACD
+Histogram = MACD − Signal Line
+
+MACD crosses above Signal → Possible buy BULLISH
+MACD crosses below Signal → Possible sell BEARISH
+Large histogram → Strong momentum
+
+EPS (Earnings Per Share):
+Formula: Profit ÷ number of shares.
+Shows how much profit each share earns.
+
+Volume:
+Number of shares traded.
+High volume = strong movement.
+
+P/E Ratio (Price to Earnings):
+Formula: Stock price ÷ EPS
+Shows if a stock is expensive or cheap compared to earnings.
+
+Market Cap:
+Total value of the company.
+Formula: Share price × total shares.
