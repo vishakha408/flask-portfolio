@@ -1,19 +1,137 @@
-# STOCK ANALYZER
-#### Description:
-Stock Analyzer is a full-stack web application designed to provide a clear, structured analysis of publicly traded stocks using a combination of fundamental financial metrics and technical market indicators. The primary goal of the project is to demonstrate how raw market data can be transformed into meaningful insights through transparent calculations, visualizations, and a rule-based scoring system. The application allows users to enter a stock ticker symbol and receive an at-a-glance evaluation of the company’s financial health, recent price behavior, and an overall recommendation based on objective criteria.
+# 📈 Stock Analyzer
 
-The backend of the application is built using Python and Flask, with a modular design that separates data retrieval, analysis, scoring, and presentation. The entry point of the application is app.py, which handles routing, form submissions, and error handling. When a user submits a ticker symbol, this file coordinates the entire analysis pipeline: fetching market data, computing financial and technical indicators, calculating scores, generating charts, and finally passing the results to the HTML templates for rendering. This separation of concerns makes the application easier to maintain and extend.
+A web app that analyzes stocks using fundamental and technical indicators — giving you a score, a recommendation (BUY / HOLD / SELL), and visual charts.
 
-Market data is retrieved in data.py using the yfinance library. This file is responsible for fetching historical price data, company information, financial statements, and balance sheets from Yahoo Finance. Because third-party APIs can be unreliable or incomplete, defensive programming techniques are used throughout this module. Try-except blocks and validation checks ensure that the application fails gracefully when data is missing or unavailable, rather than crashing or producing misleading results.
+Built with **Flask** and deployed on **Render**.
 
-Fundamental analysis logic is implemented in fundamentals.py. This file calculates key financial metrics such as revenue growth, net profit margin, return on equity, and debt-to-equity ratio. These metrics were deliberately chosen because they collectively represent growth, profitability, efficiency, and financial risk. Each function carefully checks for missing values, inconsistent financial statement formats, and division-by-zero scenarios, which are common issues when working with real-world financial data.
+---
 
-Technical indicators are handled in technicals.py. This module computes the Relative Strength Index (RSI), exponential moving averages (EMA), Moving Average Convergence Divergence (MACD), and long-term moving averages. Rather than relying on prebuilt indicator libraries, the calculations are implemented manually to improve transparency and reinforce understanding of how these indicators work. Only the most recent values are returned, as they are the most relevant for short-term interpretation and scoring.
+## 🔗 Live Demo
 
-Visual representations of technical indicators are generated in charts.py. This file uses Matplotlib to create RSI and MACD charts, which are displayed on the results page. Generating charts separately from numeric calculations was a deliberate design choice that keeps analytical logic independent from visualization logic, making both easier to debug and modify.
+> [https://your-app-name.onrender.com](https://your-app-name.onrender.com)  
+> *(Replace with your actual Render URL)*
 
-Scoring and recommendation logic is centralized in scoring.py. Individual fundamental and technical metrics are converted into normalized scores using threshold-based rules. These scores are then combined into an overall score using weighted averaging, with fundamentals given greater importance than technical indicators. A rule-based scoring system was chosen instead of machine learning models to keep the decision-making process interpretable and easy to justify.
+---
 
-The frontend consists of index.html, result.html, and style.css. The index page provides a clean search interface for entering ticker symbols, while the results page presents analysis outputs, scores, recommendations, and charts in a structured dashboard layout. The CSS file implements a modern dark-themed, responsive design with subtle animations and accessibility considerations to improve user experience.
+## 🚀 Features
 
-Overall, Stock Analyzer is an educational project that demonstrates full-stack development, financial data analysis, and thoughtful software design. The project emphasizes clarity, defensive programming, and transparency over complexity, and it clearly states that all results are for educational purposes only and not financial advice.
+- Enter any valid stock ticker (e.g. `AAPL`, `GOOGL`, `TSLA`)
+- View **fundamental metrics**: Revenue Growth, Profit Margin, Return on Equity, Debt-to-Equity
+- View **technical indicators**: RSI, MACD
+- Get an **overall score out of 10** and a **BUY / HOLD / SELL** recommendation
+- Visual **RSI and MACD charts** generated per ticker
+- 15-minute caching to reduce redundant API calls
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | Python, Flask |
+| Data | yfinance |
+| Charts | Matplotlib |
+| Caching | Flask-Caching |
+| Deployment | Render |
+
+---
+
+## 📁 Project Structure
+
+```
+stock-analyzer/
+├── app.py                  # Flask routes and core analysis logic
+├── requirements.txt        # Python dependencies
+├── analysis/
+│   ├── __init__.py
+│   ├── data.py             # Fetches stock data via yfinance
+│   ├── fundamentals.py     # Revenue growth, margin, ROE, D/E ratio
+│   ├── technicals.py       # RSI, MACD, Moving Averages
+│   ├── scoring.py          # Scoring and recommendation logic
+│   └── charts.py           # RSI and MACD chart generation
+├── static/
+│   └── style.css           # App styling
+└── templates/
+    ├── index.html          # Search page
+    └── result.html         # Results page
+```
+
+---
+
+## ⚙️ How Scoring Works
+
+The overall score (0–10) is a weighted combination:
+
+- **Fundamentals (60%)** — average of Revenue Growth, Profit Margin, ROE, and Debt-to-Equity scores
+- **Technicals (40%)** — average of RSI and MACD scores
+
+| Score | Recommendation |
+|---|---|
+| ≥ 7.5 | ✅ BUY |
+| 5.5 – 7.4 | ➡️ HOLD |
+| < 5.5 | ❌ SELL |
+
+---
+
+## 🖥️ Running Locally (VS Code)
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/your-username/stock-analyzer.git
+cd stock-analyzer
+```
+
+**2. Create and activate a virtual environment**
+```bash
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+
+# Mac/Linux
+source venv/bin/activate
+```
+
+**3. Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+**4. Run the app**
+```bash
+python app.py
+```
+
+**5. Open in browser**
+```
+http://127.0.0.1:5000
+```
+
+---
+
+## ☁️ Deploying on Render
+
+This app is configured to deploy on [Render](https://render.com) as a **Web Service**.
+
+**Steps:**
+
+1. Push your code to GitHub
+2. Go to [render.com](https://render.com) → New → Web Service
+3. Connect your GitHub repository
+4. Set the following:
+
+| Setting | Value |
+|---|---|
+| Environment | Python |
+| Build Command | `pip install -r requirements.txt` |
+| Start Command | `gunicorn app:app` |
+
+5. Click **Deploy** — Render will build and host your app automatically.
+
+> **Note:** Render's free tier spins down after inactivity. The first request after sleep may take ~30 seconds.
+
+---
+
+## ⚠️ Disclaimer
+
+This tool is for **educational purposes only**. It is not financial advice. Always do your own research before making investment decisions.
