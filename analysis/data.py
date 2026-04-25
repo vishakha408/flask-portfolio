@@ -1,66 +1,71 @@
+import time
+
 import yfinance as yf
 
 
 def get_stock_data(ticker, period="1y"):
     ticker = ticker.upper().strip()
-    stock = yf.Ticker(ticker)
+    stock  = yf.Ticker(ticker)
 
-    prices = stock.history(period=period)
-    if prices.empty:
-        raise ValueError("Price data unavailable")
-
-    # --- Company name: try multiple yfinance attributes ---
-    name = None
-    try:
-        fast = stock.fast_info
-        name = getattr(fast, "display_name", None) or getattr(fast, "short_name", None)
-    except Exception:
-        pass
-
-    if not name:
+    #  Price history (retry 3×)
+    prices = None
+    for attempt in range(3):
         try:
-            info = stock.info or {}
-            name = info.get("shortName") or info.get("longName")
-        except Exception:
-            pass
+            prices = stock.history(period=period, auto_adjust=True)
+            if prices is not None and not prices.empty:
+                break
+        except Exception as exc:
+            print(f"[data] price fetch attempt {attempt + 1} failed: {exc}")
+        time.sleep(1)
 
-    if not name:
-        try:
-            meta = stock.get_history_metadata()
-            name = meta.get("shortName") or meta.get("longName")
-        except Exception:
-            pass
+    if prices is None or prices.empty:
+        raise ValueError(f"Price data unavailable for '{ticker}'. "
+                         "Check that the ticker symbol is correct.")
 
-    # Last resort: just show the ticker symbol instead of "Unknown"
-    name = name or ticker
-
-    # --- Financials ---
+    # Company name
+    # fast_info does NOT reliably expose display_name/short_name across all
+    # yfinance versions — use stock.info instead (one HTTP call, cached by yf).
+    name = "Unknown"
     try:
-        financials = stock.financials
-        if financials is not None and financials.empty:
-            financials = None
-    except Exception:
-        financials = None
+        info = stock.info or {}
+        name = (
+            info.get("shortName")
+            or info.get("longName")
+            or info.get("name")
+            or "Unknown"
+        )
+    except Exception as exc:
+        print(f"[data] could not fetch company name: {exc}")
 
-    # --- Balance sheet ---
+    # Financials
+    financials = None
     try:
-        balance = stock.balance_sheet
-        if balance is not None and balance.empty:
-            balance = None
-    except Exception:
-        balance = None
+        df = stock.financials
+        if df is not None and not df.empty:
+            financials = df
+    except Exception as exc:
+        print(f"[data] financials fetch failed: {exc}")
 
-    # --- Full info dict (best-effort, for any extra fields) ---
+    # Balance sheet
+    balance = None
+    try:
+        df = stock.balance_sheet
+        if df is not None and not df.empty:
+            balance = df
+    except Exception as exc:
+        print(f"[data] balance sheet fetch failed: {exc}")
+
+    # Full info dict
     try:
         info = stock.info or {}
     except Exception:
         info = {}
 
     return {
-        "ticker": ticker,
-        "name": name,
-        "prices": prices,
+        "ticker":     ticker,
+        "name":       name,
+        "prices":     prices,
         "financials": financials,
-        "balance": balance,
-        "info": info,
+        "balance":    balance,
+        "info":       info,
     }

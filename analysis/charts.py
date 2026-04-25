@@ -1,4 +1,6 @@
 import os
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from analysis.technicals import ema
 
@@ -57,7 +59,7 @@ def plot_rsi(prices, ticker, period=14):
 
     #The plt.savefig(path) line saves the current figure to the specified path as an image file (in this case, a PNG).
     plt.savefig(path)
-    
+
     # The plt.close() line then closes the figure to free up memory. The function returns the filename of the saved image
     # which is used in the web application to display the chart.
     plt.close()
