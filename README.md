@@ -1,37 +1,80 @@
+<div align="center">
+
 # 📈 Stock Analyzer
 
-A web app that analyzes stocks using fundamental and technical indicators — giving you a score, a recommendation (BUY / HOLD / SELL), and visual charts.
+**AI-powered stock analysis with fundamentals, technicals, charts, and Gemini insights.**
 
-Built with **Flask** and deployed on **Render**.
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Render-46E3B7?style=for-the-badge)](https://flask-portfolio-j274.onrender.com)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-3.1-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
+[![Gemini](https://img.shields.io/badge/Gemini_AI-2.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com)
+
+</div>
 
 ---
 
-## 🔗 Live Demo
+## ✨ What It Does
 
-> [https://flask-portfolio-j274.onrender.com](https://flask-portfolio-j274.onrender.com)  
+Enter any stock ticker and get a full analysis in seconds:
+
+| Feature | Description |
+|---|---|
+| 📊 **Score** | Overall score out of 10 based on fundamentals + technicals |
+| 🎯 **Recommendation** | Clear BUY / HOLD / SELL signal |
+| 📈 **Fundamentals** | Revenue Growth, Profit Margin, ROE, Debt-to-Equity |
+| 📉 **Technicals** | RSI and MACD with visual charts |
+| 🤖 **AI Insights** | Gemini interprets the data — not just restates it |
+| ⚡ **Caching** | 15-minute cache to avoid redundant API calls |
 
 ---
 
-## 🚀 Features
+## 🤖 AI Analysis — What Makes It Different
 
-- Enter any valid stock ticker (e.g. `AAPL`, `GOOGL`, `TSLA`)
-- View **fundamental metrics**: Revenue Growth, Profit Margin, Return on Equity, Debt-to-Equity
-- View **technical indicators**: RSI, MACD
-- Get an **overall score out of 10** and a **BUY / HOLD / SELL** recommendation
-- Visual **RSI and MACD charts** generated per ticker
-- 15-minute caching to reduce redundant API calls
+Most tools just show you numbers. This app uses **Google Gemini** to interpret them:
+
+> *"Is the high debt justified by strong ROE? Are RSI and MACD confirming each other or diverging? What's the biggest risk right now?"*
+
+The AI summary answers in **4-5 bullet points**:
+- 💡 What the fundamentals tell together as a story
+- 📡 Whether technical momentum confirms or contradicts fundamentals
+- ⚠️ Biggest risk + biggest opportunity
+- 👤 What type of investor this stock suits
+
+---
+
+## ⚙️ How Scoring Works
+
+```
+Overall Score (0–10)
+├── Fundamentals (60%)
+│   ├── Revenue Growth
+│   ├── Profit Margin
+│   ├── Return on Equity
+│   └── Debt-to-Equity
+└── Technicals (40%)
+    ├── RSI
+    └── MACD
+```
+
+| Score | Signal |
+|:---:|:---:|
+| ≥ 7.5 | ✅ BUY |
+| 5.5 – 7.4 | ➡️ HOLD |
+| < 5.5 | ❌ SELL |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Backend | Python, Flask |
-| Data | yfinance |
-| Charts | Matplotlib |
-| Caching | Flask-Caching |
-| Deployment | Render |
+```
+Frontend    →  HTML, CSS (Jinja2 templates)
+Backend     →  Python, Flask
+Data        →  yfinance
+Charts      →  Matplotlib
+AI          →  Google Gemini API (gemini-2.5-flash)
+Caching     →  Flask-Caching
+Deployment  →  Render + Gunicorn
+```
 
 ---
 
@@ -39,16 +82,21 @@ Built with **Flask** and deployed on **Render**.
 
 ```
 stock-analyzer/
-├── app.py                  # Flask routes and core analysis logic
-├── requirements.txt        # Python dependencies
+│
+├── app.py                  # Core Flask routes & analysis logic
+├── ai_summary.py           # Gemini AI summary generation
+├── requirements.txt        # Dependencies
+│
 ├── analysis/
-│   ├── data.py             # Fetches stock data via yfinance
-│   ├── fundamentals.py     # Revenue growth, margin, ROE, D/E ratio
-│   ├── technicals.py       # RSI, MACD, Moving Averages
-│   ├── scoring.py          # Scoring and recommendation logic
-│   └── charts.py           # RSI and MACD chart generation
+│   ├── data.py             # yfinance data fetching
+│   ├── fundamentals.py     # Revenue, margin, ROE, D/E
+│   ├── technicals.py       # RSI, MACD
+│   ├── scoring.py          # Score + recommendation logic
+│   └── charts.py           # Chart generation
+│
 ├── static/
-│   └── style.css           # App styling
+│   └── style.css           # Styling
+│
 └── templates/
     ├── index.html          # Search page
     └── result.html         # Results page
@@ -56,38 +104,19 @@ stock-analyzer/
 
 ---
 
-## ⚙️ How Scoring Works
+## 🖥️ Run Locally
 
-The overall score (0–10) is a weighted combination:
-
-- **Fundamentals (60%)** — average of Revenue Growth, Profit Margin, ROE, and Debt-to-Equity scores
-- **Technicals (40%)** — average of RSI and MACD scores
-
-| Score | Recommendation |
-|---|---|
-| ≥ 7.5 | ✅ BUY |
-| 5.5 – 7.4 | ➡️ HOLD |
-| < 5.5 | ❌ SELL |
-
----
-
-## 🖥️ Running Locally (VS Code)
-
-**1. Clone the repository**
+**1. Clone & navigate**
 ```bash
 git clone https://github.com/vishakha408/flask-portfolio.git
 cd stock-analyzer
 ```
 
-**2. Create and activate a virtual environment**
+**2. Create virtual environment**
 ```bash
 python -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# Mac/Linux
-source venv/bin/activate
+venv\Scripts\activate        # Windows
+source venv/bin/activate     # Mac/Linux
 ```
 
 **3. Install dependencies**
@@ -95,41 +124,47 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**4. Run the app**
+**4. Add your Gemini API key**
+
+Create a `.env` file in the root:
+```
+GEMINI_API_KEY=your-key-here
+```
+Get a free key → [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
+
+**5. Run**
 ```bash
 python app.py
 ```
-
-**5. Open in browser**
-```
-http://127.0.0.1:5000
-```
+Open → `http://127.0.0.1:5000`
 
 ---
 
-## ☁️ Deploying on Render
+## ☁️ Deploy on Render
 
-This app is configured to deploy on [Render](https://render.com) as a **Web Service**.
-
-**Steps:**
-
-1. Push your code to GitHub
-2. Go to [render.com](https://render.com) → New → Web Service
-3. Connect your GitHub repository
-4. Set the following:
+1. Push code to GitHub
+2. Go to [render.com](https://render.com) → **New Web Service**
+3. Connect your repo and set:
 
 | Setting | Value |
 |---|---|
-| Environment | Python |
 | Build Command | `pip install -r requirements.txt` |
 | Start Command | `gunicorn app:app` |
 
-5. Click **Deploy** — Render will build and host your app automatically.
+4. Under **Environment Variables** add:
 
-> **Note:** Render's free tier spins down after inactivity. The first request after sleep may take ~30 seconds.
+| Key | Value |
+|---|---|
+| `GEMINI_API_KEY` | your-gemini-key |
+
+5. Hit **Deploy** 🚀
+
+> 💤 Free tier sleeps after inactivity — first request may take ~30 seconds to wake up.
 
 ---
 
-## ⚠️ Disclaimer
+<div align="center">
 
-This tool is for **educational purposes only**. It is not financial advice. Always do your own research before making investment decisions.
+⚠️ **Disclaimer:** For educational purposes only. Not financial advice. Always do your own research.
+
+</div>
