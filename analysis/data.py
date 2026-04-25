@@ -1,28 +1,11 @@
 import time
- 
+
 import yfinance as yf
- 
- 
+
+
 def get_stock_data(ticker, period="1y"):
     ticker = ticker.upper().strip()
- 
-    # Use a real browser User-Agent so Yahoo doesn't block Render's servers 
-    session = None
-    try:
-        import requests
-        session = requests.Session()
-        session.headers.update({
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/120.0.0.0 Safari/537.36"
-            )
-        })
-    except Exception:
-        pass
- 
-    ticker = ticker.upper().strip()
-    stock = yf.Ticker(ticker, session=session)
+    stock  = yf.Ticker(ticker)
 
     #  Price history (retry 3×)
     prices = None
