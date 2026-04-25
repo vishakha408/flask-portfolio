@@ -13,9 +13,6 @@ cache = Cache(app, config={
     "CACHE_DEFAULT_TIMEOUT": 900
 })
 
-# @cache.memoize is a decorator that caches the result of the get_cached_stock_data function based on the ticker symbol.
-# The timeout is set to 900 seconds (15 minutes), which means that if the same ticker is requested
-# again within that time frame, the cached data will be returned instead of fetching it again.
 @cache.memoize(timeout=900)
 def get_cached_stock_data(ticker):
     return data.get_stock_data(ticker)
@@ -23,7 +20,6 @@ def get_cached_stock_data(ticker):
 # Core analysis
 def analyze_stock(ticker):
     ticker = ticker.upper()
-    # The get_cached_stock_data function is called to retrieve the cached stock data.
     stock_data = get_cached_stock_data(ticker)
 
     prices = stock_data["prices"]
@@ -55,7 +51,11 @@ def analyze_stock(ticker):
 
     # Technicals
     rsi_value = technicals.rsi(prices)
+
+    # FIX: macd() can return None if not enough data — guard before subscripting
     macd_data = technicals.macd(prices)
+    if macd_data is None:
+        macd_data = {"macd": None, "signal": None, "histogram": None}
 
     technical_score = (
         scoring.score_rsi(rsi_value) +
@@ -71,7 +71,6 @@ def analyze_stock(ticker):
             "rsi": charts.plot_rsi(prices, ticker),
             "macd": charts.plot_macd(prices, ticker),
         }
-
     except Exception as e:
         print("Chart error:", e)
 
@@ -89,30 +88,21 @@ def analyze_stock(ticker):
     }
 
 
-
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         ticker = request.form.get("ticker", "").strip()
 
         if not ticker:
-            return render_template("index.html",error="Please enter a ticker symbol.")
+            return render_template("index.html", error="Please enter a ticker symbol.")
         try:
             result = analyze_stock(ticker)
             return render_template("result.html", result=result)
         except Exception as e:
             print("ERROR:", e)
-            return render_template("index.html",error="Invalid ticker or data unavailable.")
-   #else:
-    return render_template("index.html")
+            return render_template("index.html", error="Invalid ticker or data unavailable.")
 
-""" @app.route("/api/analyze/<ticker>")
-def analyze_api(ticker):
-    try:
-        return jsonify(analyze_stock(ticker))
-    except Exception:
-        return jsonify({"error": "Invalid ticker or data unavailable"}), 400
- """
+    return render_template("index.html")
 
 
 if __name__ == "__main__":
