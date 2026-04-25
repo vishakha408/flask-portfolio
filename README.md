@@ -8,8 +8,7 @@ Built with **Flask** and deployed on **Render**.
 
 ## 🔗 Live Demo
 
-> [https://your-app-name.onrender.com](https://your-app-name.onrender.com)  
-> *(Replace with your actual Render URL)*
+> [https://flask-portfolio-j274.onrender.com](https://flask-portfolio-j274.onrender.com)  
 
 ---
 
@@ -43,7 +42,6 @@ stock-analyzer/
 ├── app.py                  # Flask routes and core analysis logic
 ├── requirements.txt        # Python dependencies
 ├── analysis/
-│   ├── __init__.py
 │   ├── data.py             # Fetches stock data via yfinance
 │   ├── fundamentals.py     # Revenue growth, margin, ROE, D/E ratio
 │   ├── technicals.py       # RSI, MACD, Moving Averages
@@ -77,7 +75,7 @@ The overall score (0–10) is a weighted combination:
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/your-username/stock-analyzer.git
+git clone https://github.com/vishakha408/flask-portfolio.git
 cd stock-analyzer
 ```
 
