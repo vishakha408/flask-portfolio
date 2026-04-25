@@ -9,44 +9,30 @@ def get_stock_data(ticker, period="1y"):
     if prices.empty:
         raise ValueError("Price data unavailable")
 
-    # --- Company name: try methods in order of reliability ---
-    name = "Unknown"
-
-    # Method 1: history_metadata (comes free with history(), no extra request)
+    # --- Company name: try multiple yfinance attributes ---
+    name = None
     try:
-        meta = stock.get_history_metadata()
-        name = (
-            meta.get("shortName")
-            or meta.get("longName")
-            or meta.get("symbol")
-            or "Unknown"
-        )
+        fast = stock.fast_info
+        name = getattr(fast, "display_name", None) or getattr(fast, "short_name", None)
     except Exception:
         pass
 
-    # Method 2: basic_info (lightweight, doesn't hit quoteSummary endpoint)
-    if name == "Unknown":
+    if not name:
         try:
-            bi = stock.basic_info
-            name = (
-                getattr(bi, "short_name", None)
-                or getattr(bi, "long_name", None)
-                or "Unknown"
-            )
+            info = stock.info or {}
+            name = info.get("shortName") or info.get("longName")
         except Exception:
             pass
 
-    # Method 3: full info as last resort
-    if name == "Unknown":
+    if not name:
         try:
-            info = stock.info or {}
-            name = (
-                info.get("shortName")
-                or info.get("longName")
-                or "Unknown"
-            )
+            meta = stock.get_history_metadata()
+            name = meta.get("shortName") or meta.get("longName")
         except Exception:
             pass
+
+    # Last resort: just show the ticker symbol instead of "Unknown"
+    name = name or ticker
 
     # --- Financials ---
     try:
@@ -64,7 +50,7 @@ def get_stock_data(ticker, period="1y"):
     except Exception:
         balance = None
 
-    # --- Full info dict (best-effort) ---
+    # --- Full info dict (best-effort, for any extra fields) ---
     try:
         info = stock.info or {}
     except Exception:
